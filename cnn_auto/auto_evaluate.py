@@ -1,7 +1,6 @@
 from PIL import Image
 import matplotlib.pyplot as plt
 import tensorflow as tf
-import input_data
 import model
 import numpy as np
 import os
@@ -16,7 +15,7 @@ def get_one_image(train):
    image = Image.open(img_dir)
    plt.imshow(image)
    plt.show()
-   image = image.resize([208, 208])
+   image = image.resize([300, 200])
    image = np.array(image)
    return image
 
@@ -25,8 +24,8 @@ def evaluate_one_image():
    '''
    # you need to change the directories to yours.
    #train_dir = '/home/kevin/tensorflow/cats_vs_dogs/data/train/'
-   test_dir = 'D:/projects-python/ai-training-data/data/test/'
-   logs_train_dir = 'D:/projects-python/ai-training-data/logs/train/'
+   test_dir = 'D:/projects-python/ai-training-data/data/autos_test/'
+   logs_train_dir = 'D:/projects-python/ai-training-data/logs/autos/'
 
    train = get_test_image(test_dir)
    image_array = get_one_image(train)
@@ -35,10 +34,10 @@ def evaluate_one_image():
        N_CLASSES = 2
        image = tf.cast(image_array, tf.float32)
        image = tf.image.per_image_standardization(image)
-       image = tf.reshape(image, [1, 208, 208, 3])
+       image = tf.reshape(image, [1, 300, 200, 3])
        logit = model.inference(image, BATCH_SIZE, N_CLASSES)
        logit = tf.nn.softmax(logit)
-       x = tf.placeholder(tf.float32, shape=[208, 208, 3])
+       x = tf.placeholder(tf.float32, shape=[200, 300, 3])
        # you need to change the directories to yours.
        #logs_train_dir = '/home/kevin/tensorflow/cats_vs_dogs/logs/train/'
        saver = tf.train.Saver()
@@ -54,11 +53,11 @@ def evaluate_one_image():
            prediction = sess.run(logit, feed_dict={x: image_array})
            max_index = np.argmax(prediction)
            if max_index==0:
-               print('This is a cat')
+               print('This is a Toyota Camry')
            else:
-               print('This is a dog')
-           print('The possibility of cat is %.6f' %prediction[:, 0])
-           print('The possibility of dog is %.6f' %prediction[:, 1])
+               print('This is a Benz GLA')
+           print('The possibility of Toyota Camry is %.6f' %prediction[:, 0])
+           print('The possibility of Benz GLA is %.6f' %prediction[:, 1])
 
 def get_test_image(test_dir):
     print(test_dir)
